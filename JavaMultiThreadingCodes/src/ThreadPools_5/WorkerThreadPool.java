@@ -8,7 +8,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 /**
- * This is the implementation of {@link LockObjects_4.Worker} with threadPool
+ * This is the implementation of {@link D_LockObjects.Worker} with threadPool
  * <br><br>
  * Codes with minor comments are from
  * <a href="http://www.caveofprogramming.com/youtube/">
