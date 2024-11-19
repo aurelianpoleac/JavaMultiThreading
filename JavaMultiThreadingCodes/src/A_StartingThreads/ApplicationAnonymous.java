@@ -1,4 +1,4 @@
-package StartingThreads_1;
+package A_StartingThreads;
 
 /**
  * Starting threads using the Thread constructor with anonymous classes
@@ -10,7 +10,7 @@ package StartingThreads_1;
  * <br>
  * also freely available at
  * <a href="https://www.udemy.com/java-multithreading/?couponCode=FREE">
- *     <em>https://www.udemy.com/java-multithreading/?couponCode=FREE</em>
+ * <em>https://www.udemy.com/java-multithreading/?couponCode=FREE</em>
  * </a>
  *
  * @author Z.B. Celik <celik.berkay@gmail.com>
@@ -18,20 +18,15 @@ package StartingThreads_1;
 public class ApplicationAnonymous {
 
     public static void main(String[] args) {
-        Thread thread1 = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                for (int i = 0; i < 5; i++) {
-                    System.out.println("Hello: " + i + " Thread: " + Thread.currentThread().getName());
-
-                    try {
-                        Thread.sleep(100);
-                    } catch (InterruptedException ignored) {}
+        Thread thread = new Thread(() -> {
+            for (int i = 0; i < 5; i++) {
+                System.out.println("Hello: " + i + " Thread: " + Thread.currentThread().getName());
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException ignored) {
                 }
             }
         });
-
-        thread1.start();
+        thread.start();
     }
-
 }
