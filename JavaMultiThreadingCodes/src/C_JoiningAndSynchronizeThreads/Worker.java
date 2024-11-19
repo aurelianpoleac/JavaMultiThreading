@@ -14,18 +14,20 @@ import java.util.logging.Logger;
  * <br>
  * also freely available at
  * <a href="https://www.udemy.com/java-multithreading/?couponCode=FREE">
- *     <em>https://www.udemy.com/java-multithreading/?couponCode=FREE</em>
+ * <em>https://www.udemy.com/java-multithreading/?couponCode=FREE</em>
  * </a>
  *
  * @author Z.B. Celik <celik.berkay@gmail.com>
  */
 public class Worker {
 
+    private int sum = 0;
     private int count = 0;
 
     public static void main(String[] args) {
         Worker worker = new Worker();
-        worker.doWork();
+        //worker.doWork();
+        worker.addNumbers();
     }
 
     /**
@@ -41,31 +43,10 @@ public class Worker {
     }
 
     public void doWork() {
-        Thread thread1 = new Thread(new Runnable() {
-            public void run() {
-                for (int i = 0; i < 10; i++) {
-                    try {
-                        increment(Thread.currentThread().getName());
-                    } catch (InterruptedException ex) {
-                        Logger.getLogger(Worker.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                }
-            }
-        });
+        Thread thread1 = getThread();
         thread1.start();
-        Thread thread2 = new Thread(new Runnable() {
-            public void run() {
-                for (int i = 0; i < 10; i++) {
-                    try {
-                        increment(Thread.currentThread().getName());
-                    } catch (InterruptedException ex) {
-                        Logger.getLogger(Worker.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                }
-            }
-        });
+        Thread thread2 = getThread();
         thread2.start();
-
         /**
          * Join Threads: Finish until thread finishes execution, then progress
          * the code Reminder: your method is also a thread so without joining
@@ -76,7 +57,53 @@ public class Worker {
         try {
             thread1.join();
             thread2.join();
-        } catch (InterruptedException ignored) {}
+        } catch (InterruptedException ignored) {
+        }
         System.out.println("Count is: " + count);
+    }
+
+    private Thread getThread() {
+        return new Thread(() -> {
+            for (int i = 0; i < 10; i++) {
+                try {
+                    increment(Thread.currentThread().getName());
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(Worker.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        });
+    }
+
+
+    private Thread getSum() {
+        return new Thread(() -> {
+            for (int i = 0; i < 10000; i++) {
+                add(i);
+            }
+        });
+    }
+
+    public synchronized int add(int i) {
+        return sum += 1;
+    }
+
+
+    public void addNumbers() {
+        Thread t1 = getSum();
+        t1.start();
+        Thread t2 = getSum();
+        t2.start();
+        Thread t3 = getSum();
+        t3.start();
+        Thread t4 = getSum();
+        t4.start();
+        try {
+            t1.join();
+            t2.join();
+            t3.join();
+            t4.join();
+        } catch (InterruptedException ignored) {
+        }
+        System.out.println("SUM is: " + sum);
     }
 }
