@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import static java.lang.System.currentTimeMillis;
+
 /**
  * Multiple locks to speed up complex multi-threaded code. Define shared
  * objects: list1 and list2 then synchronize these objects. Mainly discussing
@@ -18,31 +20,29 @@ import java.util.Random;
  * <br>
  * also freely available at
  * <a href="https://www.udemy.com/java-multithreading/?couponCode=FREE">
- *     <em>https://www.udemy.com/java-multithreading/?couponCode=FREE</em>
+ * <em>https://www.udemy.com/java-multithreading/?couponCode=FREE</em>
  * </a>
  *
  * @author Z.B. Celik <celik.berkay@gmail.com>
  */
 public class Worker {
 
-    private Random random = new Random();
+    private final Random random = new Random();
 
     private final Object lock1 = new Object();
     private final Object lock2 = new Object();
 
-    private List<Integer> list1 = new ArrayList<>();
-    private List<Integer> list2 = new ArrayList<>();
+    private final List<Integer> list1 = new ArrayList<>();
+    private final List<Integer> list2 = new ArrayList<>();
 
     public void stageOne() {
-
         synchronized (lock1) {
             try {
                 Thread.sleep(1);
+                list1.add(random.nextInt(100));
             } catch (InterruptedException e) {
-                //do your work here
-                e.printStackTrace();
+                e.getCause();
             }
-            list1.add(random.nextInt(100));
         }
     }
 
@@ -50,13 +50,11 @@ public class Worker {
         synchronized (lock2) {
             try {
                 Thread.sleep(1);
+                list2.add(random.nextInt(100));
             } catch (InterruptedException e) {
-                //do your work here
-                e.printStackTrace();
+                e.getCause();
             }
-            list2.add(random.nextInt(100));
         }
-
     }
 
     public void process() {
@@ -66,21 +64,11 @@ public class Worker {
         }
     }
 
-    public void main() {
+    public void startWithObjectSync() {
         System.out.println("Starting ...");
-        long start = System.currentTimeMillis();
-        Thread t1 = new Thread(new Runnable() {
-            public void run() {
-                process();
-            }
-        });
-
-        Thread t2 = new Thread(new Runnable() {
-            public void run() {
-                process();
-            }
-        });
-
+        long start = currentTimeMillis();
+        Thread t1 = new Thread(this::process);
+        Thread t2 = new Thread(this::process);
         t1.start();
         t2.start();
 
@@ -88,10 +76,10 @@ public class Worker {
             t1.join();
             t2.join();
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            e.getCause();
         }
 
-        long end = System.currentTimeMillis();
+        long end = currentTimeMillis();
 
         System.out.println("Time taken: " + (end - start));
         System.out.println("List1: " + list1.size() + "; List2: " + list2.size());

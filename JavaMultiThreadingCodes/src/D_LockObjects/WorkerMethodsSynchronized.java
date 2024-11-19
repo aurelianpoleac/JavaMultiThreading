@@ -18,17 +18,17 @@ import java.util.Random;
  * <br>
  * also freely available at
  * <a href="https://www.udemy.com/java-multithreading/?couponCode=FREE">
- *     <em>https://www.udemy.com/java-multithreading/?couponCode=FREE</em>
+ * <em>https://www.udemy.com/java-multithreading/?couponCode=FREE</em>
  * </a>
  *
  * @author Z.B. Celik <celik.berkay@gmail.com>
  */
 public class WorkerMethodsSynchronized {
 
-    private Random random = new Random();
+    private final Random random = new Random();
 
-    private List<Integer> list1 = new ArrayList<>();
-    private List<Integer> list2 = new ArrayList<>();
+    private final List<Integer> list1 = new ArrayList<>();
+    private final List<Integer> list2 = new ArrayList<>();
 
     /**
      * synchronized, methods use different data (list1 list2) so by synchronized
@@ -38,22 +38,20 @@ public class WorkerMethodsSynchronized {
      */
     public synchronized void stageOne() {
         try {
-            //do your work here
             Thread.sleep(1);
+            list1.add(random.nextInt(100));
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            e.getCause();
         }
-        list1.add(random.nextInt(100));
     }
 
     public synchronized void stageTwo() {
         try {
-            //do your work here
             Thread.sleep(1);
+            list2.add(random.nextInt(100));
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            e.getCause();
         }
-        list2.add(random.nextInt(100));
     }
 
     public void process() {
@@ -66,25 +64,16 @@ public class WorkerMethodsSynchronized {
     public void main() {
         System.out.println("Starting ...");
         long start = System.currentTimeMillis();
-        Thread t1 = new Thread(new Runnable() {
-            public void run() {
-                process();
-            }
-        });
-
-        Thread t2 = new Thread(new Runnable() {
-            public void run() {
-                process();
-            }
-        });
-
+        Thread t1 = new Thread(this::process);
+        Thread t2 = new Thread(this::process);
         t1.start();
         t2.start();
 
         try {
             t1.join();
             t2.join();
-        } catch (InterruptedException ignored) {}
+        } catch (InterruptedException ignored) {
+        }
 
         long end = System.currentTimeMillis();
 

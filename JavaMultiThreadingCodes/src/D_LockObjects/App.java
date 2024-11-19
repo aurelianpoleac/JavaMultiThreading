@@ -8,7 +8,7 @@ package D_LockObjects;
  * <br>
  * also freely available at
  * <a href="https://www.udemy.com/java-multithreading/?couponCode=FREE">
- *     <em>https://www.udemy.com/java-multithreading/?couponCode=FREE</em>
+ * <em>https://www.udemy.com/java-multithreading/?couponCode=FREE</em>
  * </a>
  *
  * @author Z.B. Celik <celik.berkay@gmail.com>
@@ -16,11 +16,15 @@ package D_LockObjects;
 public class App {
 
     public static void main(String[] args) {
-        System.out.println("Synchronized Objects: ");
-        Worker worker = new Worker();
-        worker.main();
+
         System.out.println("Synchronized Methods: ");
         WorkerMethodsSynchronized worker2 = new WorkerMethodsSynchronized();
         worker2.main();
+
+
+        System.out.println("Synchronized Objects: ");
+        Worker worker = new Worker();
+        worker.startWithObjectSync();
+
     }
 }
